@@ -9,20 +9,17 @@
 </head>
 
 <body>
-
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <a href="">
+            <a href="cart.html">
                 <img src="images/shopping_cart_logo.png" alt="Shopping Cart" style="width: 100px;">
             </a>
             <div class="mx-auto d-flex align-items-center">
-                <span class="navbar-text">Krispy</span>
                 <img src="images/logo.png" alt="Logo" style="width: 100px;">
-                <span class="navbar-text">Anchovies</span>
             </div>
 
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="avatarDropdown"
+            <div class="dropdown align-items-center">
+                <button class="btn btn-muted dropdown-toggle" type="button" id="avatarDropdown"
                     data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="images/avatar.png" alt="Avatar" style="width: 30px; height: 30px; border-radius: 50%;">
                 </button>
@@ -41,19 +38,23 @@
             </button>
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" style="color:white;">Home</a>
+                    <li class="nav-item ms-5">
+                        <a class="nav-link" href="#" style="color:white;"><u>Home</u></a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item ms-5">
                         <a class="nav-link" href="#" style="color:white;">About Us</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item ms-5">
                         <a class="nav-link" href="#" style="color:white;">Products</a>
+                    </li>
+                    <li class="nav-item ms-5">
+                        <a class="nav-link" href="#" style="color:white;">Rewards</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
+    
     <div class="container py-5">
         <div class="row text-center">
             <h1>Coming Soon</h1>
@@ -62,14 +63,16 @@
                 <img src="images/octopus.webp" alt="octopus" class="img-fluid mb-3">
                 <h4>Octopus</h4>
                 <hr class="w-50">
-                <p>Meet the Octo-Friend! Soft, squishy, and full of cuddly charm—this eight-armed buddy is ready to wrap you in comfort!</p>
+                <p>Meet the Octo-Friend! Soft, squishy, and full of cuddly charm—this eight-armed buddy is ready to wrap
+                    you in comfort!</p>
             </div>
             <!-- Column 2 -->
             <div class="col-md-4 d-flex flex-column align-items-center border p-3">
                 <img src="images/pufferfish.jpg" alt="pufferfish" class="img-fluid mb-3">
                 <h4>Pufferfish</h4>
                 <hr class="w-50">
-                <p>Puff up your day with our Pufferfish Pal! Adorably squishy and full of charm, it’s the cutest catch in the sea!</p>
+                <p>Puff up your day with our Pufferfish Pal! Adorably squishy and full of charm, it’s the cutest catch
+                    in the sea!</p>
             </div>
             <!-- Column 3 -->
             <div class="col-md-4 d-flex flex-column align-items-center border p-3">
@@ -80,7 +83,46 @@
             </div>
         </div>
     </div>
-
+    <footer class="bg-secondary text-white mt-5">
+        <div class="container py-4">
+            <div class="row">
+                <!-- About Section -->
+                <div class="col-md-4 mb-3">
+                    <h4>About Us</h4>
+                    <hr class="border-light" style="width: 150px;">
+                    <p>
+                        We are a team of passionate individuals who love animals and want 
+                        to make a difference in the world. 
+                    </p>
+                </div>
+                <!-- Links Section -->
+                <div class="col-md-4 mb-3">
+                    <h4>Quick Links</h4>
+                    <hr class="border-light" style="width: 150px;">
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white text-decoration-none">Home</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">About Us</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Products</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Rewards</a></li>
+                    </ul>
+                </div>
+                <!-- Contact Section -->
+                <div class="col-md-4 mb-3">
+                    <h4>Contact Us</h4>
+                    <hr class="border-light" style="width: 150px;">
+                    <p>Email: krispyanchovies@gmail.com</p>
+                    <p>Phone: +65 9382 9858</p>
+                    <p>Address: 535 Clementi Rd, Singapore 599489</p>
+                </div>
+            </div>
+            <!-- Separator Line -->
+            <hr class="border-light">
+            <!-- Copyright Section -->
+            <div class="text-center mt-3">
+                <p class="mb-0">&copy; 2025 Krispy Anchovies. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
