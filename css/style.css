@@ -2,9 +2,6 @@
     width: 30px; 
     margin-right: 10px;
 }
-.sticky-nav {
-    position: sticky;
-    top: 0;
-    z-index: 1020;
-    background-color: white;
+.table-wrapper {
+    margin: 40px 0; /* Adjust spacing above and below */
 }
