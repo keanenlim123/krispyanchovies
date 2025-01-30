@@ -88,3 +88,101 @@ document.addEventListener("DOMContentLoaded", function () {
     addEventListenersForModal("add-orders-otter", "quantity8", "Name8", "Price8", "TotalPrice8");
     addEventListenersForModal("add-orders-crab", "quantity9", "Name9", "Price9", "TotalPrice9");
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const APIKEY = "678a60df19b96a25f2af6326";
+    document.getElementById("register").addEventListener("submit", function (e) {
+        e.preventDefault(); // Prevent default form submission
+
+        let fullname = document.getElementById("fullname").value;
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+        let points = document.getElementById("points").value;
+
+        let jsondata = {
+            "Full_Name": fullname,
+            "Email": email,
+            "Password": password,
+            "Points": points
+        };
+
+        let settings = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-apikey": APIKEY,
+                "Cache-Control": "no-cache"
+            },
+            body: JSON.stringify(jsondata)
+        };
+
+        fetch("https://krispyanchovies-33fe.restdb.io/rest/customer", settings)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Success:", data);
+                alert("Account created successfully!");
+                document.getElementById("register").reset();
+                // Redirect to login.html after successful registration
+                window.location.href = "login.html";
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Account exists! Please try again.");
+            })
+            .finally(() => {
+                document.getElementById("submit").disabled = false;
+            });
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const APIKEY = "678a60df19b96a25f2af6326";
+
+    document.getElementById("login").addEventListener("submit", function (e) {
+        e.preventDefault(); // Prevent default form submission
+
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+
+        // Fetch user data from RestDB
+        fetch(`https://krispyanchovies-33fe.restdb.io/rest/customer?q={"Email":"${email}"}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "x-apikey": APIKEY,
+                "Cache-Control": "no-cache"
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                alert("Account does not exist. Please sign up.");
+                return;
+            }
+
+            let user = data[0]; // Get the first matching user
+            if (user.Password === password) {
+                alert("Login successful!");
+                // Store user session (you can replace this with a proper session system)
+                sessionStorage.setItem("user", JSON.stringify(user));
+                window.location.href = "index.html"; // Redirect after login
+            } else {
+                alert("Incorrect password. Please try again.");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred while logging in. Please try again.");
+        });
+    });
+});
