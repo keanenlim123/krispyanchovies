@@ -12,7 +12,12 @@
             const APIKEY = "678a60df19b96a25f2af6326";
             const API_URL = "https://krispyanchovies-33fe.restdb.io/rest/cart";
 
-            // Fetch orders from RestDB
+            let user = sessionStorage.getItem("user");
+
+            user = JSON.parse(user);
+            const userEmail = user.Email; // Using Email instead of Full_Name
+
+            // Fetch orders for the logged-in user
             function fetchOrders() {
                 fetch(API_URL, {
                     method: "GET",
@@ -27,39 +32,38 @@
                         const tableBody = document.getElementById("order-table-body");
                         const subtotalCell = document.getElementById("subtotal-value");
                         tableBody.innerHTML = ""; // Clear existing rows
-                        let subtotal = 0; // Initialize subtotal
+                        let subtotal = 0;
 
-                        if (data.length === 0) {
+                        // Filter orders by user email
+                        let userOrders = data.filter(order => order.Email === userEmail);
+
+                        if (userOrders.length === 0) {
                             tableBody.innerHTML = `<tr><td colspan="6" class="text-center">No orders found</td></tr>`;
-                            subtotalCell.textContent = "$0.00"; // Set subtotal to 0 if no orders
+                            subtotalCell.textContent = "$0.00";
                             return;
                         }
 
-                        data.forEach((order, index) => {
+                        userOrders.forEach((order, index) => {
                             const row = document.createElement("tr");
-
                             row.innerHTML = `
-                                <td>${index + 1}</td>
-                                <td>${order.Name || "N/A"}</td>
-                                <td>${order.Quantity || "0"}</td>
-                                <td>$${order.Price || "0.00"}</td>
-                                <td>$${order.Total_Price || "0.00"}</td>
-                                <td>
-                                    <button class="btn btn-danger btn-sm delete-btn" data-id="${order._id}">Delete</button>
-                                </td>
-                            `;
+                        <td>${index + 1}</td>
+                        <td>${order.Name || "N/A"}</td>
+                        <td>${order.Quantity || "0"}</td>
+                        <td>$${order.Price || "0.00"}</td>
+                        <td>$${order.Total_Price || "0.00"}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm delete-btn" data-id="${order._id}">Delete</button>
+                        </td>
+                    `;
                             tableBody.appendChild(row);
 
-                            // Add the item's total price to the subtotal
                             subtotal += parseFloat(order.Total_Price) || 0;
                         });
 
-                        // Display the updated subtotal
                         subtotalCell.textContent = `$${subtotal.toFixed(2)}`;
 
-                        // Add event listeners for all delete buttons
-                        const deleteButtons = document.querySelectorAll(".delete-btn");
-                        deleteButtons.forEach(button => {
+                        // Add event listeners for delete buttons
+                        document.querySelectorAll(".delete-btn").forEach(button => {
                             button.addEventListener("click", function () {
                                 const id = this.getAttribute("data-id");
                                 deleteOrder(id);
@@ -73,7 +77,6 @@
                     });
             }
 
-            // Delete order by ID
             function deleteOrder(id) {
                 if (confirm("Are you sure you want to delete this order?")) {
                     fetch(`${API_URL}/${id}`, {
@@ -98,9 +101,10 @@
                         });
                 }
             }
-            // Initial fetch of orders
+
             fetchOrders();
         });
+
     </script>
 </head>
 
