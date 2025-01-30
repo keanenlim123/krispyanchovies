@@ -88,3 +88,4 @@ document.addEventListener("DOMContentLoaded", function () {
     addEventListenersForModal("add-orders-otter", "quantity8", "Name8", "Price8", "TotalPrice8");
     addEventListenersForModal("add-orders-crab", "quantity9", "Name9", "Price9", "TotalPrice9");
 });
+
