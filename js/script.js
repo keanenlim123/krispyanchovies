@@ -89,6 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
     addEventListenersForModal("add-orders-crab", "quantity9", "Name9", "Price9", "TotalPrice9");
 });
 
+<<<<<<< HEAD
 document.addEventListener("DOMContentLoaded", function () {
     const APIKEY = "678a60df19b96a25f2af6326";
     document.getElementById("register").addEventListener("submit", function (e) {
@@ -186,3 +187,5 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+=======
+>>>>>>> 713b917a3bc5c1902defa6488ad28728b0a786fb
