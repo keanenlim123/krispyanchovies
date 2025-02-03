@@ -11,7 +11,7 @@
     </script>
 </head>
 
-<body>  
+<body>
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a href="cart.html">
@@ -35,7 +35,7 @@
     </nav>
     <hr>
     <nav class="navbar navbar-expand-lg navbar-white bg-white">
-        
+
         <div class="container-fluid">
             <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,15 +53,18 @@
                         <a class="nav-link" href="products.html" style="color:black; font-size: 20px;">Products</a>
                     </li>
                     <li class="nav-item ms-5">
-                        <a class="nav-link" href="rewards.html" style="color:black; font-size: 20px; font-weight: 700;">Rewards</a>
+                        <a class="nav-link" href="rewards.html"
+                            style="color:black; font-size: 20px; font-weight: 700;">Rewards</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
     <hr>
-    <section class="bg-light text-center text-white" style="background: url('images/hero_4.gif') no-repeat center center/cover; height: 100vh;">
-        <div class="d-flex flex-column justify-content-center align-items-center h-100" style="background-color: rgba(0, 0, 0, 0.5);">
+    <section class="bg-light text-center text-white"
+        style="background: url('images/hero_4.gif') no-repeat center center/cover; height: 100vh;">
+        <div class="d-flex flex-column justify-content-center align-items-center h-100"
+            style="background-color: rgba(0, 0, 0, 0.5);">
             <h1 class="display-4 fw-bold mb-3">Rewards</h1>
             <p class="lead mb-4">Claim amazing rewards!</p>
             <a href="#rewards" class="btn btn-primary btn-lg">Go now!</a>
@@ -70,39 +73,43 @@
     <div class="container mt-5">
         <h2 class="text-center">Your Rewards</h2>
         <div class="card text-center p-4 mt-3">
-            <p id="rewards">Reward Balance:</h1></p>
+            <p id="rewards">Reward Balance:</p>
         </div>
 
         <h3 class="mt-4"></h3>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card p-3 text-center">
-                    <img src="images/fivepercent.png" alt="fivepercent">
-                    <h5>$5 percent off</h5>
-                    <p>Cost: 100 Coins</p>
-                    <button class="btn btn-primary">Redeem</button>
+        <div class="container mt-5">
+            <h3 class="mt-4"></h3>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card p-3 text-center">
+                        <img src="images/fivepercent.png" alt="fivepercent">
+                        <h5>5 percent off</h5>
+                        <p>Cost: 100 Coins</p>
+                        <button class="btn btn-primary redeem-btn" data-cost="100" data-coupon-name="COUPON_5OFF"
+                            data-coupon-code="5 percent Off" data-email="">Redeem</button>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card p-3 text-center">
-                    <img src="images/tenpercent.png" alt="tenpercent">
-                    <h5>$10 percent off</h5>
-                    <p>Cost: 180 Coins</p>
-                    <button class="btn btn-primary">Redeem</button>
+                <div class="col-md-4">
+                    <div class="card p-3 text-center">
+                        <img src="images/tenpercent.png" alt="tenpercent">
+                        <h5>10 percent off</h5>
+                        <p>Cost: 180 Coins</p>
+                        <button class="btn btn-primary redeem-btn" data-cost="180" data-coupon-name="COUPON_10OFF"
+                            data-coupon-code="10 percent Off" data-email="">Redeem</button>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card p-3 text-center">
-                    <img src="images/free.png" alt="freedelivery">
-                    <h5>Free Shipping</h5>
-                    <p>Cost: 150 Coins</p>
-                    <button class="btn btn-primary">Redeem</button>
+                <div class="col-md-4">
+                    <div class="card p-3 text-center">
+                        <img src="images/free.png" alt="freedelivery">
+                        <h5>Free Shipping</h5>
+                        <p>Cost: 150 Coins</p>
+                        <button class="btn btn-primary redeem-btn" data-cost="150" data-coupon-name="COUPON_FREESHIP"
+                            data-coupon-code="Free Shipping" data-email="">Redeem</button>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
-
     <footer class="bg-secondary text-white mt-5">
         <div class="container py-4">
             <div class="row">
