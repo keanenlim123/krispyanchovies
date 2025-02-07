@@ -536,6 +536,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 document.addEventListener("DOMContentLoaded", function () {
     let user = JSON.parse(sessionStorage.getItem("user"));
+    
 
     let userEmail = user.Email;
     let points = user.Points || 0;
@@ -551,40 +552,25 @@ document.addEventListener("DOMContentLoaded", function () {
     const APIKEY = "678a60df19b96a25f2af6326";
     const COUPON_API = "https://krispyanchovies-33fe.restdb.io/rest/coupons";
     const ORDER_API = "https://krispyanchovies-33fe.restdb.io/rest/orders";
-    const CART_API = "https://krispyanchovies-33fe.restdb.io/rest/cart";
-    const CUSTOMER_API = "https://krispyanchovies-33fe.restdb.io/rest/customer";
+    const CART_API = "https://krispyanchovies-33fe.restdb.io/rest/cart"; // Assuming 'cart' is the collection name
 
     let user = JSON.parse(sessionStorage.getItem("user"));
     const userEmail = user.Email;
 
     document.getElementById("payment-form").addEventListener("submit", function (event) {
-        event.preventDefault();
-
+        event.preventDefault(); 
+        
         const cardName = document.getElementById("card-name").value;
-        let user = JSON.parse(sessionStorage.getItem("user"));
-        let points = user.Points || 0;
         const cardNumber = document.getElementById("card-number").value;
         const expiryDate = document.getElementById("expiry-date").value;
         const cvv = document.getElementById("cvv").value;
         const couponCode = document.getElementById("coupon-code").value.trim();
         const orderTotal = parseFloat(document.getElementById("modal-total-price").textContent.replace("$", "")) || 0;
-        document.getElementById("payment-form").style.visibility = "hidden"; // Keep modal open
-        let lottieContainer = document.getElementById("lottie-container");
-        lottieContainer.style.visibility = "visible";  // Make it visible
-        lottieContainer.style.opacity = "1";  // Fade it in
 
         // Step 1: Process order
         processOrder(cardName, cardNumber, expiryDate, cvv, couponCode, orderTotal)
             .then(() => {
-                // Step 2: Remove coupon from the database (if there's a valid coupon)
-                if (couponCode) {
-                    removeCouponFromDatabase(couponCode);
-                }
-
-                // Step 3: Update customer points
-                updateCustomerPoints(userEmail, orderTotal);
-
-                // Step 4: Delete all cart items for this email
+                // Step 2: Delete all cart items for this email
                 deleteUserCart(userEmail);
             })
             .catch(error => {
@@ -592,110 +578,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert("An error occurred while processing your order. Try again later.");
             });
     });
-    function removeCouponFromDatabase(couponCode) {
-        return fetch(`${COUPON_API}?q={"Code":"${couponCode}"}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "x-apikey": APIKEY,
-                "Cache-Control": "no-cache"
-            }
-        })
-            .then(response => response.json())
-            .then(coupons => {
-                if (coupons.length === 0) {
-                    console.log("Coupon not found.");
-                    return;
-                }
-
-                const couponId = coupons[0]._id;  // Assuming coupons[0] is the coupon object
-
-                return fetch(`${COUPON_API}/${couponId}`, {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-apikey": APIKEY,
-                        "Cache-Control": "no-cache"
-                    }
-                });
-            })
-            .then(() => {
-                console.log("Coupon deleted successfully.");
-            })
-            .catch(error => {
-                console.error("Error deleting coupon:", error);
-            });
-    }
-    function updateCustomerPoints(email, orderTotal) {
-        const pointsEarned = Math.floor(orderTotal / 10);
-
-        return fetch(`${CUSTOMER_API}?q={"Email":"${email}"}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "x-apikey": APIKEY,
-                "Cache-Control": "no-cache"
-            }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch customer data: ${response.status} ${response.statusText}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log("Customer data received:", data); // Debugging
-
-                if (!Array.isArray(data) || data.length === 0) {
-                    throw new Error("Customer not found.");
-                }
-
-                const customer = data[0];
-                console.log("Customer:", customer);  // Check the customer object received
-
-                // Ensure Points defaults to 0 if undefined and handle invalid points
-                let currentPoints = customer.Points || 0;
-                currentPoints = parseInt(currentPoints, 10);  // Convert Points to an integer
-                if (isNaN(currentPoints)) {
-                    console.error("Invalid current points value:", customer.Points);
-                    throw new Error("Invalid points value.");
-                }
-
-                const newPoints = currentPoints + pointsEarned;
-
-                console.log(`Updating points: ${currentPoints} -> ${newPoints}`);
-
-                // Prepare the updated customer object
-                const updatedCustomerData = {
-                    Email: customer.Email,
-                    Full_Name: customer.Name,
-                    Password: customer.Password,
-                    Points: newPoints // Update points
-                };
-                
-
-                // Make the PUT request to update customer points
-                return fetch(`${CUSTOMER_API}/${customer._id}`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-apikey": APIKEY,
-                        "Cache-Control": "no-cache"
-                    },
-                    body: JSON.stringify(updatedCustomerData)
-                });
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Failed to update customer points: ${response.status} ${response.statusText}`);
-                }
-                console.log("Customer points updated successfully!");
-            })
-            .catch(error => {
-                console.error("Error updating customer points:", error);
-                alert(error.message || "An error occurred while updating customer points.");
-            });
-    }
 
     function processOrder(cardName, cardNumber, expiryDate, cvv, couponCode, orderTotal) {
         const orderData = {
@@ -717,11 +599,11 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify(orderData)
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Order placement failed.");
-                }
-            });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Order placement failed.");
+            }
+        });
     }
 
     function deleteUserCart(email) {
@@ -733,27 +615,28 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Cache-Control": "no-cache"
             }
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.length === 0) return;
+        .then(response => response.json())
+        .then(data => {
+            if (data.length === 0) return;
+            
+            let deletePromises = data.map(item => fetch(`${CART_API}/${item._id}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-apikey": APIKEY,
+                    "Cache-Control": "no-cache"
+                }
+            }));
 
-                let deletePromises = data.map(item => fetch(`${CART_API}/${item._id}`, {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-apikey": APIKEY,
-                        "Cache-Control": "no-cache"
-                    }
-                }));
-
-                return Promise.all(deletePromises);
-            })
-            .then(() => {
-                alert("Payment successful! Your order has been placed and cart has been cleared.");
-                window.location.reload();
-            })
-            .catch(error => {
-                console.error("Error clearing cart:", error);
-            });
+            return Promise.all(deletePromises);
+        })
+        .then(() => {
+            alert("Payment successful! Your order has been placed and cart has been cleared.");
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error("Error clearing cart:", error);
+            alert("Order placed, but failed to clear cart.");
+        });
     }
 });
