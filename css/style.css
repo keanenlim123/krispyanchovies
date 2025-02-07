@@ -2,3 +2,6 @@
     width: 30px; 
     margin-right: 10px;
 }
+.container {
+    min-height: 60vh;
+}
