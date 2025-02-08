@@ -533,10 +533,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 });
 
-
 document.addEventListener("DOMContentLoaded", function () {
     let user = JSON.parse(sessionStorage.getItem("user"));
-
 
     let userEmail = user.Email;
     let points = user.Points || 0;
@@ -546,6 +544,11 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchCartData(userEmail);
 
     document.getElementById("checkout-btn").addEventListener("click", showCheckoutModal);
+
+    document.getElementById("rewards").innerHTML = `Reward Balance: <h1><span class="text-success">${points} Coins</span></h1>`;
+
+    fetchCartData(userEmail);
+
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -554,6 +557,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const ORDER_API = "https://krispyanchovies-33fe.restdb.io/rest/orders";
     const CART_API = "https://krispyanchovies-33fe.restdb.io/rest/cart";
     const CUSTOMER_API = "https://krispyanchovies-33fe.restdb.io/rest/customer";
+    const FUNDS_API = "https://krispyanchovies-33fe.restdb.io/rest/funds";
 
     let user = JSON.parse(sessionStorage.getItem("user"));
     const userEmail = user.Email;
@@ -567,6 +571,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const cvv = document.getElementById("cvv").value;
         const couponCode = document.getElementById("coupon-code").value.trim();
         const orderTotal = parseFloat(document.getElementById("modal-total-price").textContent.replace("$", "")) || 0;
+        document.getElementById("payment-form").style.visibility = "hidden"; // Keep modal open
+        let lottieContainer = document.getElementById("lottie-container");
+        lottieContainer.style.visibility = "visible";  // Make it visible
+        lottieContainer.style.opacity = "1";  // Fade it in
 
         // Step 1: Process order
         processOrder(cardName, cardNumber, expiryDate, cvv, couponCode, orderTotal)
@@ -578,6 +586,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Step 3: Update customer points
                 updateCustomerPoints(userEmail, orderTotal);
+                updateFunds(orderTotal);
 
                 // Step 4: Delete all cart items for this email
                 deleteUserCart(userEmail);
@@ -623,7 +632,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     function updateCustomerPoints(email, orderTotal) {
         const pointsEarned = Math.floor(orderTotal / 10);
-    
+
         return fetch(`${CUSTOMER_API}?q={"Email":"${email}"}`, {
             method: "GET",
             headers: {
@@ -632,65 +641,111 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Cache-Control": "no-cache"
             }
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Failed to fetch customer data: ${response.status} ${response.statusText}`);
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch customer data: ${response.status} ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Customer data received:", data); // Debugging
+
+                if (!Array.isArray(data) || data.length === 0) {
+                    throw new Error("Customer not found.");
+                }
+
+                const customer = data[0];
+                console.log("Customer:", customer);  // Check the customer object received
+
+                // Ensure Points defaults to 0 if undefined and handle invalid points
+                let currentPoints = customer.Points || 0;
+                currentPoints = parseInt(currentPoints, 10);  // Convert Points to an integer
+                if (isNaN(currentPoints)) {
+                    console.error("Invalid current points value:", customer.Points);
+                    throw new Error("Invalid points value.");
+                }
+
+                const newPoints = currentPoints + pointsEarned;
+                let updatedUser = {...customer, Points: newPoints };
+                sessionStorage.setItem("user", JSON.stringify(updatedUser));
+                console.log(updatedUser)
+
+
+                console.log(`Updating points: ${currentPoints} -> ${newPoints}`);
+
+                // Prepare the updated customer object
+                const updatedCustomerData = {
+                    Email: customer.Email,
+                    Full_Name: customer.Name,
+                    Password: customer.Password,
+                    Points: newPoints // Update points
+                };
+
+
+                // Make the PUT request to update customer points
+                return fetch(`${CUSTOMER_API}/${customer._id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": APIKEY,
+                        "Cache-Control": "no-cache"
+                    },
+                    body: JSON.stringify(updatedCustomerData)
+                });
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Failed to update customer points: ${response.status} ${response.statusText}`);
+                }
+                console.log("Customer points updated successfully!");
+            })
+            .catch(error => {
+                console.error("Error updating customer points:", error);
+                alert(error.message || "An error occurred while updating customer points.");
+            });
+    }
+    function updateFunds(amount) {
+        return fetch(FUNDS_API, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "x-apikey": APIKEY,
+                "Cache-Control": "no-cache"
             }
+        })
+        .then(response => {
+            if (!response.ok) throw new Error(`Failed to fetch funds data: ${response.status} ${response.statusText}`);
             return response.json();
         })
         .then(data => {
-            console.log("Customer data received:", data); // Debugging
-            
-            if (!Array.isArray(data) || data.length === 0) {
-                throw new Error("Customer not found.");
-            }
+            if (!Array.isArray(data) || data.length < 3) throw new Error("No February record found.");
     
-            const customer = data[0];
-            console.log("Customer:", customer);  // Check the customer object received
+            const februaryEntry = data[2]; // Assuming February is the third entry
+            let currentFunds = Number(februaryEntry.funds) || 0;
+            if (isNaN(currentFunds)) throw new Error("Invalid funds value.");
     
-            // Ensure Points defaults to 0 if undefined and handle invalid points
-            let currentPoints = customer.Points || 0;  
-            currentPoints = parseInt(currentPoints, 10);  // Convert Points to an integer
-            if (isNaN(currentPoints)) {
-                console.error("Invalid current points value:", customer.Points);
-                throw new Error("Invalid points value.");
-            }
+            const newFunds = currentFunds + amount;
+            console.log(`Updating February funds: ${currentFunds} -> ${newFunds}`);
     
-            const newPoints = currentPoints + pointsEarned;
-    
-            console.log(`Updating points: ${currentPoints} -> ${newPoints}`);
-    
-            // Prepare the updated customer object
-            const updatedCustomerData = {
-                Email: customer.Email,
-                Full_Name: customer.Name,
-                Password: customer.Password,
-                Points: newPoints // Update points
-            };
-    
-            // Make the PUT request to update customer points
-            return fetch(`${CUSTOMER_API}/${customer._id}`, {
+            return fetch(`${FUNDS_API}/${februaryEntry._id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                     "x-apikey": APIKEY,
                     "Cache-Control": "no-cache"
                 },
-                body: JSON.stringify(updatedCustomerData)
+                body: JSON.stringify({ funds: newFunds })
             });
         })
         .then(response => {
-            if (!response.ok) {
-                throw new Error(`Failed to update customer points: ${response.status} ${response.statusText}`);
-            }
-            console.log("Customer points updated successfully!");
+            if (!response.ok) throw new Error(`Failed to update February funds: ${response.status} ${response.statusText}`);
+            console.log("February funds updated successfully!");
         })
         .catch(error => {
-            console.error("Error updating customer points:", error);
-            alert(error.message || "An error occurred while updating customer points.");
+            console.error("Error updating February funds:", error);
+            alert(error.message || "An error occurred while updating February funds.");
         });
     }
-    
 
     function processOrder(cardName, cardNumber, expiryDate, cvv, couponCode, orderTotal) {
         const orderData = {
@@ -718,6 +773,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
     }
+    function updateRewardBalance(points) {
+        const rewardsElement = document.getElementById("rewards");
+        if (rewardsElement) {
+            rewardsElement.innerHTML = `Reward Balance: <h1><span class="text-success">${points} Coins</span></h1>`;
+        } else {
+            console.error("Element with ID 'rewards' not found.");
+        }
+    }    
 
     function deleteUserCart(email) {
         fetch(`${CART_API}?q={"Email":"${email}"}`, {
@@ -752,3 +815,67 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 });
+
+const apiKey = "678a60df19b96a25f2af6326";
+const apiUrl = "https://krispyanchovies-33fe.restdb.io/rest/funds";
+
+async function fetchFundsData() {
+    try {
+        const response = await fetch(apiUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "x-apikey": apiKey
+            }
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch data");
+
+        const data = await response.json();
+
+        // Assuming each record has 'month' and 'funds' keys
+        const months = data.map(entry => entry.months);
+        const funds = data.map(entry => Number(entry.funds));
+        displayChart(months, funds);
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+}
+
+function displayChart(months, funds) {
+    const ctx = document.getElementById("myChart").getContext("2d");
+
+    new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: months,
+            datasets: [{
+                label: "Krispy Anchovies Money Raised",
+                data: funds,
+                backgroundColor: 'rgba(32, 164, 100, 1)', // Bar color
+                borderColor: 'rgba(32, 164, 100, 1)',
+                borderWidth: 1,
+                borderRadius: 10, // Rounded corners
+                barThickness: 30 // Adjust bar thickness
+            }]
+        },
+        options: {
+            responsive: true,
+            indexAxis: 'y', // Horizontal bars
+            scales: {
+                x: {
+                    beginAtZero: true // Start x-axis at zero
+                },
+                y: {
+                    beginAtZero: true // Start y-axis at zero
+                }
+            }
+        }
+    });
+    
+    const totalFunds = funds.reduce((sum, val) => sum + val, 0);
+    document.getElementById("totalHeader").textContent = "Total Money Raised: $" + totalFunds;
+    // Update total funds
+}
+
+fetchFundsData();

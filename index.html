@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Krispy Anchovies</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="images/Logo.png">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/script.js">
     </script>
 </head>
 
 <body>
-
     <div class="bg-warning text-center py-2">
         <p class="mb-0">🎉 Limited! All items are 50% Off!🎉</p>
     </div>
@@ -77,7 +78,7 @@
     <div class="container-fluid d-flex align-items-center my-5">
         <div class="row g-0 w-100">
             <div class="col-md-6 p-0">
-                <img src="images/Logo.png" alt="grouper image" class="img-fluid h-100 w-100 object-fit-cover">
+                <img src="images/Logo_big.png" alt="grouper image" class="img-fluid h-100 w-100 object-fit-cover">
             </div>
 
             <div class="col-md-6 d-flex flex-column justify-content-center p-5">
@@ -87,6 +88,10 @@
             </div>
         </div>
     </div>
+    <div class="graph-container">
+        <h2 id="totalHeader"></h2>
+        <canvas id="myChart" width="1000" height="200"></canvas>
+    </div>
     <div class="container-fluid d-flex align-items-center my-5">
         <div class="row g-0 w-100">
             <div class="col-md-6 p-0 order-1 order-md-2">
@@ -94,7 +99,7 @@
             </div>
 
             <div class="col-md-6 d-flex flex-column justify-content-center p-5 order-2 order-md-1">
-                <h1 class="display-4">Buy Our Products Now!</h1>
+                <h1 class="display-4">Snuggle the Sea!</h1>
                 <p class="lead">Visit our products section help support the marine wildlife right now!</p>
                 <a href="products.html" class="btn btn-primary btn-lg">Visit now!</a>
             </div>
@@ -111,7 +116,7 @@
                 <p class="lead">We would like to hear from you. Send us a message and we will be happy to reply!</p>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contactModal">
                     Contact Us
-                </button>   
+                </button>
             </div>
         </div>
     </div>
