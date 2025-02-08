@@ -566,6 +566,8 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault();
 
         const cardName = document.getElementById("card-name").value;
+        let user = JSON.parse(sessionStorage.getItem("user"));
+        let points = user.Points || 0;
         const cardNumber = document.getElementById("card-number").value;
         const expiryDate = document.getElementById("expiry-date").value;
         const cvv = document.getElementById("cvv").value;
@@ -680,7 +682,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     Password: customer.Password,
                     Points: newPoints // Update points
                 };
-
 
                 // Make the PUT request to update customer points
                 return fetch(`${CUSTOMER_API}/${customer._id}`, {
