@@ -1,8 +1,6 @@
 # krispyanchovies
 Krispy Anchovies is an e-commerce company with a mission to make a positive impact on marine wildlife conservation. Specializing in aquatic animal-themed plushies, we aim to combine comfort and care for the environment. Each purchase contributes to initiatives focused on protecting and preserving marine ecosystems. By choosing one of our plushies, customers not only gain a soft, lovable companion but also become active participants in the effort to save ocean wildlife. Together, we are driving meaningful change, one plushie at a time.
 
-Wireframe url: https://www.figma.com/design/LMew8sa7a7JGuqKkulpbr0/IP-Applied-design-Website-design(ID)?node-id=0-1&t=SqtQbFWiKeyKpRSo-1
-
 # Design Process
 Theme & Visual Appeal making the website visually engaging while maintaining a professional and approachable feel.
 
@@ -15,6 +13,10 @@ Products - display all the company available products which users can click an i
 Rewards - The Rewards Page plays a key role in gamifying the shopping experience, making it more engaging and rewarding for users. Users will be able to get points from buying our products and spending their points with our rewards page section.
 
 Cart - To display all the products added to cart.
+
+Wireframe url: https://www.figma.com/design/LMew8sa7a7JGuqKkulpbr0/IP-Applied-design-Website-design(ID)?node-id=0-1&t=SqtQbFWiKeyKpRSo-1
+
+Github url: https://github.com/keanenlim123/krispyanchovies
 
 # Features
 Navigation: The site features a collapsible hamburger menu for easy navigation in mobile.
